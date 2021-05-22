@@ -1,6 +1,16 @@
 #!/bin/bash
 
+# get current branch
+BRANCH=`git branch | grep \* | cut -d ' ' -f2`
+# Checkout release
 git checkout release
-git merge master
-git push server release
-git checkout master
+# Merge with last branch
+git merge $BRANCH
+# Push to server if available
+if git remote | grep server > /dev/null; then
+    git push server release
+fi
+# Push to origin
+git push origin release
+# Switch back to last branch
+git checkout $BRANCH
